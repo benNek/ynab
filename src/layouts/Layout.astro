@@ -1,5 +1,6 @@
 ---
 import "../styles/global.css";
+import Header from "./Header.astro";
 ---
 <!doctype html>
 <html lang="en">
@@ -11,7 +12,10 @@ import "../styles/global.css";
 		<title>YNAB Converter</title>
 	</head>
 	<body>
-		<slot />
+    <Header />
+    <div class="container mx-auto">
+		  <slot />
+    </div>
 	</body>
 </html>
 

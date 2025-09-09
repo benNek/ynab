@@ -9,9 +9,9 @@ export default function Converter() {
   };
 
   return (
-    <div>
+    <section>
       <FileUpload onFileUpload={handleFileUpload} />
-    </div>
+    </section>
   );
 }
 
