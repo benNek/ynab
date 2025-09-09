@@ -1,5 +1,6 @@
 import { useCallback } from "react";
 import { useDropzone } from "react-dropzone";
+import { Card, CardDescription, CardHeader, CardTitle } from "@/components/ui/card.tsx";
 
 type Props = {
   onFileUpload: (file: File) => void;
@@ -22,10 +23,13 @@ export default function FileUpload({ onFileUpload }: Props) {
 
   return (
     <section className="container">
-      <div {...getRootProps({ className: "dropzone" })}>
+      <Card {...getRootProps({ className: "dropzone" })}>
+        <CardHeader>
+          <CardTitle>Select file to upload</CardTitle>
+          <CardDescription>Only .csv files are supported.</CardDescription>
+        </CardHeader>
         <input {...getInputProps()} />
-        <p>Drag 'n' drop some files here, or click to select files</p>
-      </div>
+      </Card>
     </section>
   );
 }
