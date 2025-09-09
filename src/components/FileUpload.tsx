@@ -1,12 +1,22 @@
 import { useCallback } from "react";
 import { useDropzone } from "react-dropzone";
 
-export default function FileUpload() {
-  const onDrop = useCallback((acceptedFiles: File[]) => {
-    console.log(acceptedFiles);
+type Props = {
+  onFileUpload: (file: File) => void;
+};
+
+export default function FileUpload({ onFileUpload }: Props) {
+  const onDrop = useCallback(async (files: File[]) => {
+    if (files.length !== 1) {
+      return;
+    }
+
+    onFileUpload(files[0]);
   }, []);
 
   const { getRootProps, getInputProps } = useDropzone({
+    accept: { "text/csv": [".csv"] },
+    multiple: false,
     onDrop,
   });
 
