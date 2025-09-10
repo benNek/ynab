@@ -1,9 +1,24 @@
+import { Bank } from "@/types/bank.ts";
+import { SebConverter } from "@/features/converter/seb-converter.ts";
+import { SwedbankConverter } from "@/features/converter/swedbank-converter.ts";
+
 export interface Fields {
   DATE: string;
   RECIPIENT: string;
   DESCRIPTION: string;
   AMOUNT: string;
   DEBIT_OR_CREDIT: string;
+}
+
+export function convert(bank: Bank, data: string): string {
+  switch (bank) {
+    case Bank.SEB:
+      return new SebConverter().convert(data);
+    case Bank.SWEDBANK:
+      return new SwedbankConverter().convert(data);
+    default:
+      throw new Error("Unknown bank type " + bank);
+  }
 }
 
 // TODO: add validation

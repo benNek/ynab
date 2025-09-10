@@ -31,7 +31,7 @@ export default function FileUpload({ onFileUpload }: Props) {
   return (
     <Card
       {...getRootProps({ className: "dropzone" })}
-      className="border-dashed shadow-none mx-auto lg:w-1/2 xl::w-1/3"
+      className="border-dashed shadow-none mx-auto"
     >
       <CardHeader>
         <CardTitle>Select file to convert to YNAB supported format</CardTitle>
