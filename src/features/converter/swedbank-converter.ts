@@ -16,6 +16,15 @@ export class SwedbankConverter implements BankConverter {
       header: true,
     });
 
-    return transform(FIELDS, parseResult.data, (val) => val === "D");
+    return transform(FIELDS, parseResult.data, this.isDebit, this.shouldSkip);
+  }
+
+  isDebit(value: string): boolean {
+    return value === "D";
+  }
+
+  shouldSkip(entry: unknown): boolean {
+    const paymentType = entry[""];
+    return paymentType != 20;
   }
 }

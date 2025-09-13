@@ -26,15 +26,15 @@ export function transform(
   fields: Fields,
   rows: unknown[],
   isDebitFn: (field: string) => boolean,
+  shouldSkip: (row: unknown) => boolean,
 ) {
   const newRows = [`"Date","Payee","Memo","Amount"`];
   for (const row of rows) {
-    const payee = row[fields.RECIPIENT];
-    if (!payee?.trim()?.length) {
+    if (shouldSkip(row)) {
       continue;
     }
 
-    // const isDebit = row[FIELDS.DEBIT_OR_CREDIT] === "D";
+    const payee = row[fields.RECIPIENT];
     const isDebit = isDebitFn(row[fields.DEBIT_OR_CREDIT]);
     const amount = isDebit ? `-${row[fields.AMOUNT]}` : row[fields.AMOUNT];
     const date = row[fields.DATE];

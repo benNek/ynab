@@ -18,6 +18,15 @@ export class SebConverter implements BankConverter {
       skipFirstNLines: 1,
     });
 
-    return transform(FIELDS, parseResult.data, (val) => val === "D");
+    return transform(FIELDS, parseResult.data, this.isDebit, this.shouldSkip);
+  }
+
+  isDebit(value: string): boolean {
+    return value === "D";
+  }
+
+  shouldSkip(entry: unknown): boolean {
+    const payee = entry[FIELDS.RECIPIENT];
+    return payee?.trim()?.length > 0;
   }
 }
