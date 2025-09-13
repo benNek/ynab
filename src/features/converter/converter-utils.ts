@@ -34,11 +34,11 @@ export function transform(
       continue;
     }
 
-    const payee = row[fields.RECIPIENT];
+    const payee = row[fields.RECIPIENT] ?? "Unknown";
     const isDebit = isDebitFn(row[fields.DEBIT_OR_CREDIT]);
     const amount = isDebit ? `-${row[fields.AMOUNT]}` : row[fields.AMOUNT];
     const date = row[fields.DATE];
-    const memo = row[fields.DESCRIPTION];
+    const memo = row[fields.DESCRIPTION] ?? "";
     const newRow = `"${formatField(date)}","${formatField(payee)}","${formatField(memo)}","${amount}"`;
     newRows.push(newRow);
   }
