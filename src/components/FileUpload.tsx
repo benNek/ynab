@@ -8,6 +8,7 @@ import {
   CardTitle,
 } from "@/components/ui/card.tsx";
 import { Button } from "@/components/ui/button.tsx";
+import { FileUp } from "lucide-react";
 
 type Props = {
   onFileUpload: (file: File) => void;
@@ -39,7 +40,10 @@ export default function FileUpload({ onFileUpload }: Props) {
       </CardHeader>
       <input {...getInputProps()} />
       <CardFooter>
-        <Button>Select files</Button>
+        <Button>
+          <FileUp />
+          Select files
+        </Button>
       </CardFooter>
     </Card>
   );
