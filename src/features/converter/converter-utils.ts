@@ -3,6 +3,7 @@ import { SebConverter } from "@/features/converter/seb-converter.ts";
 import { SwedbankConverter } from "@/features/converter/swedbank-converter.ts";
 import type { Transaction } from "@/types/transaction.ts";
 import Papa from "papaparse";
+import type { BankConverter } from "@/features/converter/bank-converter.ts";
 
 export interface Fields {
   DATE: string;
@@ -13,13 +14,11 @@ export interface Fields {
 }
 
 export function convert(bank: Bank, data: string): string {
-  switch (bank) {
-    case Bank.SEB:
-      return new SebConverter().convert(data);
-    case Bank.SWEDBANK:
-      return new SwedbankConverter().convert(data);
-    default:
-      throw new Error("Unknown bank type " + bank);
+  const converter = getConverter(bank);
+  try {
+    return converter.convert(data);
+  } catch (error) {
+    throw Error("Failed to convert bank data");
   }
 }
 
@@ -59,6 +58,17 @@ export function transform(
   }
 
   return newRows.join("\n");
+}
+
+function getConverter(bank: Bank): BankConverter {
+  switch (bank) {
+    case Bank.SEB:
+      return new SebConverter();
+    case Bank.SWEDBANK:
+      return new SwedbankConverter();
+    default:
+      throw new Error("Unknown bank type " + bank);
+  }
 }
 
 function formatField(value: string) {

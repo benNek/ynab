@@ -9,6 +9,7 @@ import { convert } from "@/features/converter/converter-utils.ts";
 import PrivacyNotice from "@/components/PrivacyNotice.tsx";
 import ConvertedTransactions from "@/components/ConvertedTransactions.tsx";
 import ImportGuidelines from "@/components/ImportGuidelines.tsx";
+import ConversationErrorAlert from "@/components/ConversionErrorAlert.tsx";
 
 export default function Converter() {
   const [fileName, setFileName] = useState<string | null>(null);
@@ -16,26 +17,34 @@ export default function Converter() {
   // TODO: load from custom preferences
   const [bank, setBank] = useState<Bank>(Bank.SWEDBANK);
   const [converted, setConverted] = useState<string | null>(null);
+  const [error, setError] = useState<string | null>(null);
 
   const handleFileUpload = async (file: File) => {
     const fileContent = await file.text();
     setFileName(file.name);
     setContent(fileContent);
-    handleConversion(fileContent);
+    handleConversion(fileContent, bank);
   };
 
-  const handleBikeSelectionChange = (bankSelection: Bank) => {
+  const handleBankSelectionChange = (bankSelection: Bank) => {
     setBank(bankSelection);
-    handleConversion(content);
+    handleConversion(content, bankSelection);
   };
 
-  const handleConversion = (fileContent: string | null) => {
+  const handleConversion = (fileContent: string | null, bank: Bank) => {
     if (!fileContent) {
       throw new Error("Missing uploaded file");
     }
 
     // TODO: store transactions in here
-    setConverted(convert(bank, fileContent));
+    try {
+      const result = convert(bank, fileContent);
+      setConverted(result);
+      setError(null);
+    } catch (error) {
+      setError(error.message);
+      setConverted(null);
+    }
   };
 
   const handleDownload = () => {
@@ -53,20 +62,25 @@ export default function Converter() {
       {hasContent && (
         <div>
           <Separator className="my-8" />
-          <ImportGuidelines />
+          {!!error && <ConversationErrorAlert message={error} />}
+          {!error && <ImportGuidelines />}
           <div className="mt-4 flex items-center justify-between">
-            <Button onClick={handleDownload}>
-              <FileDown />
-              Download
-            </Button>
+            {!error && (
+              <Button onClick={handleDownload}>
+                <FileDown />
+                Download
+              </Button>
+            )}
             <BankSelection
               activeBank={bank}
-              onBankSelectionChange={handleBikeSelectionChange}
+              onBankSelectionChange={handleBankSelectionChange}
             />
           </div>
-          <div className="mt-4">
-            <ConvertedTransactions data={converted} />
-          </div>
+          {!error && (
+            <div className="mt-4">
+              <ConvertedTransactions data={converted} />
+            </div>
+          )}
         </div>
       )}
     </section>
