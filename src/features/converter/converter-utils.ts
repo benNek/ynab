@@ -1,6 +1,8 @@
 import { Bank } from "@/types/bank.ts";
 import { SebConverter } from "@/features/converter/seb-converter.ts";
 import { SwedbankConverter } from "@/features/converter/swedbank-converter.ts";
+import type { Transaction } from "@/types/transaction.ts";
+import Papa from "papaparse";
 
 export interface Fields {
   DATE: string;
@@ -19,6 +21,20 @@ export function convert(bank: Bank, data: string): string {
     default:
       throw new Error("Unknown bank type " + bank);
   }
+}
+
+export function parseTransactions(data: string): Array<Transaction> {
+  const res = Papa.parse(data, { header: true });
+
+  return res.data.map((row) => {
+    console.log(row);
+    return {
+      date: row?.Date,
+      payee: row?.Payee,
+      memo: row?.Memo,
+      amount: row?.Amount,
+    };
+  });
 }
 
 // TODO: add validation

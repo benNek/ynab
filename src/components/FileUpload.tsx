@@ -2,6 +2,7 @@ import { useCallback } from "react";
 import { useDropzone } from "react-dropzone";
 import {
   Card,
+  CardContent,
   CardDescription,
   CardFooter,
   CardHeader,
@@ -11,10 +12,11 @@ import { Button } from "@/components/ui/button.tsx";
 import { FileUp } from "lucide-react";
 
 type Props = {
+  uploadedFile: string | null;
   onFileUpload: (file: File) => void;
 };
 
-export default function FileUpload({ onFileUpload }: Props) {
+export default function FileUpload({ uploadedFile, onFileUpload }: Props) {
   const onDrop = useCallback(async (files: File[]) => {
     if (files.length !== 1) {
       return;
@@ -39,12 +41,18 @@ export default function FileUpload({ onFileUpload }: Props) {
         <CardDescription>Only .csv file are supported.</CardDescription>
       </CardHeader>
       <input {...getInputProps()} />
-      <CardFooter>
+      <CardContent>
         <Button>
           <FileUp />
           Select files
         </Button>
-      </CardFooter>
+      </CardContent>
+      {!!uploadedFile && (
+        <CardFooter>
+          Selected file:
+          <b>{uploadedFile}</b>
+        </CardFooter>
+      )}
     </Card>
   );
 }

@@ -4,30 +4,41 @@ import BankSelection from "@/components/BankSelection.tsx";
 import { Separator } from "@/components/ui/separator.tsx";
 import { Bank } from "@/types/bank.ts";
 import { Button } from "@/components/ui/button.tsx";
-import { ArrowLeftRight } from "lucide-react";
+import { FileDown } from "lucide-react";
 import { convert } from "@/features/converter/converter-utils.ts";
 import PrivacyNotice from "@/components/PrivacyNotice.tsx";
+import ConvertedTransactions from "@/components/ConvertedTransactions.tsx";
 
 export default function Converter() {
+  const [fileName, setFileName] = useState<string | null>(null);
   const [content, setContent] = useState<string | null>(null);
   // TODO: load from custom preferences
   const [bank, setBank] = useState<Bank>(Bank.SWEDBANK);
+  const [converted, setConverted] = useState<string | null>(null);
 
   const handleFileUpload = async (file: File) => {
-    setContent(await file.text());
+    const fileContent = await file.text();
+    setFileName(file.name);
+    setContent(fileContent);
+    handleConversion(fileContent);
   };
 
   const handleBikeSelectionChange = (bankSelection: Bank) => {
     setBank(bankSelection);
+    handleConversion(content);
   };
 
-  const handleConversion = () => {
-    if (!content) {
+  const handleConversion = (fileContent: string | null) => {
+    if (!fileContent) {
       throw new Error("Missing uploaded file");
     }
 
-    const result = convert(bank, content);
-    download(result);
+    // TODO: store transactions in here
+    setConverted(convert(bank, fileContent));
+  };
+
+  const handleDownload = () => {
+    download(converted);
   };
 
   const hasContent = !!content;
@@ -37,7 +48,7 @@ export default function Converter() {
       <div className="my-4">
         <PrivacyNotice />
       </div>
-      <FileUpload onFileUpload={handleFileUpload} />
+      <FileUpload uploadedFile={fileName} onFileUpload={handleFileUpload} />
       {hasContent && (
         <div>
           <Separator className="my-8" />
@@ -46,10 +57,13 @@ export default function Converter() {
             onBankSelectionChange={handleBikeSelectionChange}
           />
           <div className="mt-4">
-            <Button onClick={handleConversion}>
-              <ArrowLeftRight />
-              Convert
+            <Button onClick={handleDownload}>
+              <FileDown />
+              Download
             </Button>
+          </div>
+          <div className="mt-4">
+            <ConvertedTransactions data={converted} />
           </div>
         </div>
       )}
