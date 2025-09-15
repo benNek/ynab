@@ -6,6 +6,7 @@ import { Bank } from "@/types/bank.ts";
 import { Button } from "@/components/ui/button.tsx";
 import { ArrowLeftRight } from "lucide-react";
 import { convert } from "@/features/converter/converter-utils.ts";
+import PrivacyNotice from "@/components/PrivacyNotice.tsx";
 
 export default function Converter() {
   const [content, setContent] = useState<string | null>(null);
@@ -33,6 +34,9 @@ export default function Converter() {
 
   return (
     <section>
+      <div className="my-4">
+        <PrivacyNotice />
+      </div>
       <FileUpload onFileUpload={handleFileUpload} />
       {hasContent && (
         <div>
