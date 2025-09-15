@@ -8,6 +8,7 @@ import { FileDown } from "lucide-react";
 import { convert } from "@/features/converter/converter-utils.ts";
 import PrivacyNotice from "@/components/PrivacyNotice.tsx";
 import ConvertedTransactions from "@/components/ConvertedTransactions.tsx";
+import ImportGuidelines from "@/components/ImportGuidelines.tsx";
 
 export default function Converter() {
   const [fileName, setFileName] = useState<string | null>(null);
@@ -52,15 +53,16 @@ export default function Converter() {
       {hasContent && (
         <div>
           <Separator className="my-8" />
-          <BankSelection
-            activeBank={bank}
-            onBankSelectionChange={handleBikeSelectionChange}
-          />
-          <div className="mt-4">
+          <ImportGuidelines />
+          <div className="mt-4 flex items-center justify-between">
             <Button onClick={handleDownload}>
               <FileDown />
               Download
             </Button>
+            <BankSelection
+              activeBank={bank}
+              onBankSelectionChange={handleBikeSelectionChange}
+            />
           </div>
           <div className="mt-4">
             <ConvertedTransactions data={converted} />

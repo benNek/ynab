@@ -27,7 +27,6 @@ export function parseTransactions(data: string): Array<Transaction> {
   const res = Papa.parse(data, { header: true });
 
   return res.data.map((row) => {
-    console.log(row);
     return {
       date: row?.Date,
       payee: row?.Payee,
