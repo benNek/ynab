@@ -16,8 +16,16 @@ export interface Fields {
 export function convert(bank: Bank, data: string): string {
   const converter = getConverter(bank);
   try {
-    return converter.convert(data);
+    const converted = converter.convert(data);
+
+    const transactionCount = converted.split("\n").length;
+    if (transactionCount < 2) {
+      throw Error("No transaction found.");
+    }
+
+    return converted;
   } catch (error) {
+    console.error(error);
     throw Error("Failed to convert bank data");
   }
 }

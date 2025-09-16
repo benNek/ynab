@@ -27,6 +27,6 @@ export class SebConverter implements BankConverter {
 
   shouldSkip(entry: unknown): boolean {
     const payee = entry[FIELDS.RECIPIENT];
-    return payee?.trim()?.length > 0;
+    return (payee?.trim()?.length ?? 0) < 1;
   }
 }
